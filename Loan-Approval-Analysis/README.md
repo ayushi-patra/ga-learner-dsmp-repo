@@ -19,7 +19,7 @@ Pivot table operations
 - Next, checked the percentage of loan approved based on a person's employment type.
 - Finally, solved questions like,  
 
-        1. Found number of applicants having long loan amount term
+        1. Found number of applicants having long loan amount term for Government Audit
         2. Average income of an applicant and the average loan given to a person based on their income.
 
 
