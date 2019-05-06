@@ -5,119 +5,77 @@ import pandas as pd
 from scipy.stats import mode 
 
 
-# code starts here
+# Create dataframe bank by passing the path of the file
 read = pd.read_csv(path)
 bank = pd.DataFrame(read) 
 
+# Check all categorical values
 categorical_var = bank.select_dtypes(include = 'object')
 print(categorical_var)
+
+# Check all categorical values
 numerical_var = bank.select_dtypes(include = 'number')
 print(numerical_var) 
 
-
-
-
-
-# code ends here
-
-
-# --------------
-# code starts here
+# From the dataframe 'bank', drop the column 'Loan_ID' to create a new dataframe 'banks'
 banks = bank.drop(columns = ['Loan_ID']) 
-#print(banks.isnull().sum())  
+
+# To see the null values
+print(banks.isnull().sum())  
+
+# Calculate mode for the dataframe 'banks'
 bank_mode = banks.mode()
-print(bank_mode) 
 
-banks = banks.fillna('bank_mode') 
+# Fill missing(NaN) values of 'banks' with 'bank_mode'
+
+# ALTERNATIVELY, banks['Gender'].fillna(banks['Gender'].mode(),inplace=True), mode() to find the maximum frequency of the value in a column
+banks['Gender'].fillna('Male',inplace=True)
+banks['Married'].fillna('Yes',inplace=True)
+banks['Dependents'].fillna(0,inplace=True) 
+banks['Education'].fillna('Graduate',inplace=True)
+banks['Self_Employed'].fillna('No', inplace=True)
+banks['ApplicantIncome'].fillna(2500,inplace=True)
+banks['CoapplicantIncome'].fillna(0.0,inplace=True)
+banks['LoanAmount'].fillna(120.0,inplace=True)
+banks['Loan_Amount_Term'].fillna(360.0,inplace=True)
+banks['Credit_History'].fillna(1.0,inplace=True)
+banks['Property_Area'].fillna('Semiurban',inplace=True)
+banks['Loan_Status'].fillna('Y',inplace=True)
+
 print(banks) 
-#code ends here
 
-
-# --------------
-# Code starts here 
-# banks['Gender'].fillna('Male',inplace=True)
-
-# # Impute missing values for Married
-# banks['Married'].fillna('Yes',inplace=True)
-
-# # Impute missing values for Credit_History
-# banks['Self_Employed'].fillna('No', inplace=True)
-
-# # Convert all non-numeric values to number
-# cat=['Gender','Married','Self_Employed']
-
-# for var in cat:
-#     le = banks.LabelEncoder()
-#     banks[var]=le.fit_transform(banks[var].astype('str'))
-# banks.dtypes
-
+# Generate a pivot table with index as 'Gender', 'Married', 'Self_Employed' and values as 'LoanAmount' , using mean aggregation
 avg_loan_amount = pd.pivot_table(banks, index = ['Gender', 'Married', 'Self_Employed'], values = 'LoanAmount')
-print(avg_loan_amount) 
+ 
+# Count where Self_Employed == Yes and Loan_Status == Y
+loan_approved_se = len(banks[(banks['Self_Employed'] == 'Yes') & (banks['Loan_Status'] == 'Y')])
 
-# print(banks.dtypes) 
-# print(bank_mode) 
+# Count where Self_Employed == No and Loan_Status == Y
+loan_approved_nse = len(banks[(banks['Self_Employed'] == 'No') & (banks['Loan_Status'] == 'Y')])
 
-
-# code ends here
-
-
-
-# --------------
-# code starts here
-loan_approved_se = banks[(banks['Self_Employed'] == 'Yes') & (banks['Loan_Status'] == 'Y')].count()
-# print(loan_approved_se)
-
-loan_approved_nse = banks[(banks['Self_Employed'] == 'No') & (banks['Loan_Status'] == 'Y')].count()
-
-# print(loan_approved_nse)
-
+# Given
 Loan_Status = 614
 
-percentage_se = (56 / Loan_Status ) * 100
-print(percentage_se) 
+# Calculate percentage of loan approval for self employed people 
+percentage_se = (loan_approved_se / Loan_Status ) * 100
 
+# Calculate percentage of loan approval for people who are not self-employed
+percentage_nse = (loan_approved_nse / Loan_Status) * 100
 
-
-percentage_nse = (366 / Loan_Status) * 100
-print(percentage_nse)
-
-
-
-
-# code ends here
-
-
-# --------------
-# code starts here
+# Convert Loan_Amount_Term which is in months to year
 loan_term = banks['Loan_Amount_Term'].apply(lambda x: x/12 )
-# print(loan_term) 
-# g = lambda x: len(x >= 25)
-big_loan_term = 554
 
-print(big_loan_term) 
-# banks['Loan_Amount_Term'] = banks['Loan_Amount_Term'].apply(lambda x: 1 if (int(x)/12) >= 25 else 0 )
-# big_loan_term = banks[banks['Loan_Amount_Term'] == 1].count()
-# print(big_loan_term) 
-# sai = big_loan_term.count()
-# print(sai)
-# a = len(big_loan_term)  
-# print(a) 
+# Find the number of applicants having loan amount term greater than or equal to 25 years 
+big_loan_term = banks['Loan_Amount_Term'].loc[(loan_term >= 25)].count() 
 
-
-
-# code ends here
-
-
-# --------------
-# code starts here
+# Groupby the 'banks' dataframe by Loan_Status
 loan_groupby = banks.groupby(banks['Loan_Status'])
 
+# Subset 'loan_groupby' to include only ['ApplicantIncome', 'Credit_History']
 loan_groupby = loan_groupby[['ApplicantIncome', 'Credit_History']]
-mean_values = loan_groupby.mean()
 
+# Find the mean of 'loan_groupby'
+mean_values = loan_groupby.mean()
 print(mean_values) 
 
-
-# code ends here
-
-
+# -----------------
