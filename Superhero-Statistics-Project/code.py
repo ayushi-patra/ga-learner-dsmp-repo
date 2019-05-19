@@ -52,11 +52,7 @@ y = np.linspace(0,100)
 f, (ax_1, ax_2, ax_3) = plt.subplots(3, sharex=True, sharey=True)
 ax_1.boxplot(data[['Intelligence']]) 
 ax_1.set_title('Intelligence')
-
 ax_2.boxplot(data[['Speed']]) 
 ax_2.set_title('Speed')
-
 ax_3.boxplot(data[['Power']]) 
 ax_3.set_title('Power')
-
-
