@@ -1,29 +1,25 @@
 # --------------
-#Header files
+# Header files
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+# path of the data file, 
+path
 
-#path of the data file- path
-
-#Code starts here 
+# Code starts here 
 data = pd.read_csv(path) 
 
 data['Gender'].replace('-', 'Agender', inplace = True)
 gender_count = data['Gender'].value_counts() 
 plt.bar(gender_count, height = 0.5, align='center', alpha=0.5)  
 
-
-# --------------
-#Code starts here
+# What's the stand of the members of 'ASB'. Does good overpower evil or does evil overwhelm good? 
 alignment = data.Alignment.value_counts()
 plt.pie(alignment) 
 plt.title("Character Alignment")
 
-
-# --------------
-#Code starts here
+# Find out if combat skills relate to person's strength or it's intelligence?
 sc_df = data[['Strength', 'Combat']]
 sc_covariance = data.Strength.cov(data.Combat) 
 sc_strength = data.Strength.std()
@@ -38,23 +34,17 @@ ic_combat = data.Combat.std()
 
 ic_pearson = ic_covariance / (ic_combat * ic_intelligence) 
 
-
-
-# --------------
-#Code starts here
+# Who are the best of the best in this superhero universe?
 total_high = data.Total.quantile(0.99) 
 
 super_best = data[data['Total'] > total_high] 
 print(super_best)
 
-
 super_best_names = super_best.Name.tolist()  
 print(super_best_names) 
 
 
-# --------------
-#Code starts here
-#data.boxplot(column=['Intelligence', 'Speed', 'Power']) 
+# Of the top 1% members of 'ASB', measure certain attributes in case they go rogue and become threatening to the human kind.
 
 x = np.linspace(0,100)
 y = np.linspace(0,100) 
@@ -68,8 +58,5 @@ ax_2.set_title('Speed')
 
 ax_3.boxplot(data[['Power']]) 
 ax_3.set_title('Power')
-
-
-
 
 
