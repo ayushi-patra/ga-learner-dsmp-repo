@@ -1,4 +1,5 @@
-# --------------
+# Data Loading and Splitting
+
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -10,20 +11,17 @@ df = pd.read_csv(path)
 print(df.columns)
 print(df.columns[0:5])
 
-X = df.loc[:, df.columns != 'SellerG']
+X = df.loc[:, df.columns != 'Price']
 
 y = df['Price']
-
-print(y.shape) 
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state = 6)
 corr = X_train.corr() 
 print(corr)
 
+# Prediction Using Linear Regression
 
 
-
-# --------------
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 
@@ -34,9 +32,10 @@ regressor.fit(X_train, y_train)
 y_pred = regressor.predict(X_test)
 
 r2 = r2_score(y_test, y_pred)
+print(r2) 
 
+# Prediction Using Lasso
 
-# --------------
 from sklearn.linear_model import Lasso
 
 # Code starts here
@@ -46,9 +45,10 @@ lasso.fit(X_train, y_train)
 lasso_pred = lasso.predict(X_test)
 
 r2_lasso = r2_score(y_test, lasso_pred) 
+print(r2_lasso) 
 
+# Prediction using Ridge
 
-# --------------
 from sklearn.linear_model import Ridge
 
 # Code starts here
@@ -59,13 +59,11 @@ ridge_pred = ridge.predict(X_test)
 r2_ridge = r2_score(y_test, ridge_pred)
 print(r2_ridge) 
 
+# Prediction Using Cross Validation
 
-# Code ends here
-
-
-# --------------
 from sklearn.model_selection import cross_val_score
 import statistics
+
 #Code starts here
 regressor = LinearRegression()
 score = cross_val_score(regressor, X_train, y_train, cv = 10)
@@ -73,8 +71,8 @@ score = cross_val_score(regressor, X_train, y_train, cv = 10)
 mean_score = statistics.mean(score)
 print(mean_score) 
 
+# Prediction Using Polynomial Regressor
 
-# --------------
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import make_pipeline
 
@@ -86,5 +84,4 @@ y_pred = model.predict(X_test)
 
 r2_poly = r2_score(y_test, y_pred)
 print(r2_poly) 
-
 
